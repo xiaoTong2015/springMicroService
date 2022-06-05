@@ -1,0 +1,45 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: zuulsrv
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+zuul:
+  prefix: /api  #指定服务前缀
+  routes:
+    # 根据服务ID映射服务地址
+    organizationservice: /organization/**
+    # 手动映射服务地址
+    licensingservice:
+      path: /licensing/**
+      url: http://localhost:8081
+  # 忽略指定服务ID
+  # ignored-services: "organizationservice"
+
+# Zuul使用Hystrix和Ribbon库帮助防止长时间运行的服务调用影响服务网关的性能
+# 默认情况下，对于任何超过1s（Hystrix默认值）来处理调用，Zuul将终止并返回500报错
+# 可以将“default”换成指定服务ID
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+# Ribbon 同样会超时任何5s的调用
+ribbon:
+  ReadTimeout: 5000
+  ConnectTimeout: 5000
+  # 是否在Ribbon中使用Eureka
+  eureka:
+    enabled: false
+
+

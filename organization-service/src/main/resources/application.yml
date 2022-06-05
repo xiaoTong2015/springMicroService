@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: organizationservice
+server:
+  port: 8091
+eureka:
+  instance:
+    prefer-ip-address: true # 注册服务的IP，而不是服务器的主机名（因为在容器中使用的使随机的主机名，并且容器没有DNS记录）
+  client:
+    register-with-eureka: true  # 向Eureka注册服务
+    fetch-registry: true  # 拉取注册表的本地副本
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
